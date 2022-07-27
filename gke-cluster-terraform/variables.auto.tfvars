@@ -1,0 +1,11 @@
+credentials  = "./tf-gke-keyfile.json"
+project_id   = "solutionsarchitect-01"
+region       = "europe-west2"
+zones        = ["europe-west2-a", "europe-west2-b", "europe-west2-c"]
+name         = "afaedda-gke"
+machine_type = "e2-medium"
+min_count    = 1
+max_count    = 1
+disk_size_gb = 10
+service_account = "afaedda-tf-gke@solutionsarchitect-01.iam.gserviceaccount.com"
+initial_node_count = 1
