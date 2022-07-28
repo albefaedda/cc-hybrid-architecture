@@ -23,7 +23,7 @@ create table if not exists sellers (
 create table if not exists products (
     productId integer primary key,
     productName varchar(40), 
-    productCost varchar(15),
+    productCost money,
     productQuantity int, 
     sellerName varchar(40),
     productLastUpdateTime timestamp
