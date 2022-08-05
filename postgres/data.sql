@@ -32,7 +32,7 @@ create table if not exists products (
 create table if not exists orders (
     orderId integer primary key,
     customerName varchar(40),
-    itemsOrdered integer[],
+    itemsOrdered varchar(40),
     orderStatus status,
     trackingNumber varchar(20),
     createTime timestamp,
@@ -62,20 +62,20 @@ insert into products (productId, productName, productCost, productQuantity, sell
 insert into products (productId, productName, productCost, productQuantity, sellerName, productLastUpdateTime) values(5, 'Potatoes - Yukon Gold, 80 Ct', '$33.92', 12, 'Randie Gresser', '2022-07-11 07:09:15'::timestamp);
 
 /* Insert Orders */ 
-insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6706, 'Alan Turing', array [1, 3, 5, 5], 'SUBMITTED', 'N/A', '2022-07-13 11:54:00'::timestamp,'2022-07-13 11:54:00'::timestamp);
-insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6707, 'Bob Barker', array [1, 1, 3], 'SUBMITTED', 'N/A', '2022-07-13 11:55:00'::timestamp, '2022-07-13 11:55:00'::timestamp);
-insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6708, 'Chris Farley', array [2, 4], 'SUBMITTED', 'N/A', '2022-07-13 11:56:00'::timestamp, '2022-07-13 11:56:00'::timestamp);
-insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6709, 'Luke Skywalker', array [1], 'SUBMITTED', 'N/A', '2022-07-13 11:57:00'::timestamp, '2022-07-13 11:27:00'::timestamp);
-insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6710, 'Ronald Reagan', array [2, 2, 2], 'SUBMITTED','N/A', '2022-07-13 11:58:00'::timestamp, '2022-07-13 11:28:00'::timestamp);
-insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6711, 'Alan Turing', array [1, 2, 4, 5], 'PROCESSED', 'N/A', '2022-07-13 11:54:00'::timestamp, '2022-07-13 12:44:00'::timestamp);
-insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6712, 'Bob Barker', array [1, 5, 3], 'PROCESSED', 'N/A', '2022-07-13 11:55:00'::timestamp, '2022-07-13 02:45:00'::timestamp);
-insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6713, 'Chris Farley', array [2, 4, 5], 'PROCESSED', 'N/A', '2022-07-13 11:56:00'::timestamp, '2022-07-13 02:56:00'::timestamp);
-insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6714, 'Ronald Reagan', array [2, 2, 3, 5], 'PROCESSED', 'N/A', '2022-07-13 11:58:00'::timestamp, '2022-07-13 01:58:00'::timestamp);
-insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6715, 'Chris Farley', array [2, 4, 5], 'IN-TRANSIT','1349826936', '2022-07-13 11:56:00'::timestamp, '2022-07-10 14:56:00'::timestamp);
-insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6716, 'Luke Skywalker', array [1, 2, 3], 'IN-TRANSIT', '7616308716', '2022-07-13 11:57:00'::timestamp, '2022-07-19 17:57:00'::timestamp);
-insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6717, 'Ronald Reagan', array [2, 2, 2, 2, 2, 3], 'IN-TRANSIT', '4276596882', '2022-07-13 11:58:00'::timestamp, '2022-07-17 19:58:00'::timestamp);
-insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6718, 'Luke Skywalker', array [1, 3, 4, 5], 'SHIPPED', '7616308716', '2022-07-13 11:57:00'::timestamp, '2022-07-19 17:57:00'::timestamp);
-insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6719, 'Ronald Reagan', array [2, 2, 2, 3, 4, 4, 4, 5], 'SHIPPED', '4276596882', '2022-07-13 11:58:00'::timestamp, '2022-07-21 01:58:00'::timestamp);
+insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6706, 'Alan Turing','{ 1, 3, 5, 5 }', 'SUBMITTED', 'N/A', '2022-07-13 11:54:00'::timestamp,'2022-07-13 11:54:00'::timestamp);
+insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6707, 'Bob Barker',  '{ 1, 1, 3 }', 'SUBMITTED', 'N/A', '2022-07-13 11:55:00'::timestamp, '2022-07-13 11:55:00'::timestamp);
+insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6708, 'Chris Farley', '{ 2, 4 }', 'SUBMITTED', 'N/A', '2022-07-13 11:56:00'::timestamp, '2022-07-13 11:56:00'::timestamp);
+insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6709, 'Luke Skywalker',  '{ 1 }', 'SUBMITTED', 'N/A', '2022-07-13 11:57:00'::timestamp, '2022-07-13 11:27:00'::timestamp);
+insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6710, 'Ronald Reagan',  '{ 2, 2, 2 }', 'SUBMITTED','N/A', '2022-07-13 11:58:00'::timestamp, '2022-07-13 11:28:00'::timestamp);
+insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6711, 'Alan Turing',  '{ 1, 2, 4, 5 }', 'PROCESSED', 'N/A', '2022-07-13 11:54:00'::timestamp, '2022-07-13 12:44:00'::timestamp);
+insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6712, 'Bob Barker',  '{ 1, 5, 3 }', 'PROCESSED', 'N/A', '2022-07-13 11:55:00'::timestamp, '2022-07-13 02:45:00'::timestamp);
+insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6713, 'Chris Farley',  '{ 2, 4, 5 }', 'PROCESSED', 'N/A', '2022-07-13 11:56:00'::timestamp, '2022-07-13 02:56:00'::timestamp);
+insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6714, 'Ronald Reagan',  '{ 2, 2, 3, 5 }', 'PROCESSED', 'N/A', '2022-07-13 11:58:00'::timestamp, '2022-07-13 01:58:00'::timestamp);
+insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6715, 'Chris Farley',  '{ 2, 4, 5 }', 'IN-TRANSIT','1349826936', '2022-07-13 11:56:00'::timestamp, '2022-07-10 14:56:00'::timestamp);
+insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6716, 'Luke Skywalker',  '{ 1, 2, 3 }', 'IN-TRANSIT', '7616308716', '2022-07-13 11:57:00'::timestamp, '2022-07-19 17:57:00'::timestamp);
+insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6717, 'Ronald Reagan',  '{ 2, 2, 2, 2, 2, 3 }', 'IN-TRANSIT', '4276596882', '2022-07-13 11:58:00'::timestamp, '2022-07-17 19:58:00'::timestamp);
+insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6718, 'Luke Skywalker',  '{ 1, 3, 4, 5 }', 'SHIPPED', '7616308716', '2022-07-13 11:57:00'::timestamp, '2022-07-19 17:57:00'::timestamp);
+insert into orders (orderId, customerName, itemsOrdered, orderStatus, trackingNumber, createTime, lastUpdateTime) values(6719, 'Ronald Reagan',  '{ 2, 2, 2, 3, 4, 4, 4, 5 }', 'SHIPPED', '4276596882', '2022-07-13 11:58:00'::timestamp, '2022-07-21 01:58:00'::timestamp);
 
 /*
 orderId,customerName,itemsOrdered,orderStatus,trackingNumber,createTime,lastUpdateTime

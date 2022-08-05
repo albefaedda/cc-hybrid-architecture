@@ -8,7 +8,7 @@ metadata:
 spec:
   storageClassName: manual
   capacity:
-    storage: 5Gi # Sets PV's size
+    storage: 1Gi # Sets PV's size
   accessModes:
     - ReadWriteMany
   hostPath:

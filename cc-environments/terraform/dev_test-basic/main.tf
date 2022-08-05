@@ -198,6 +198,25 @@ resource "confluent_kafka_acl" "kstreams-sa-read-on-group" {
   }
 }
 
+resource "confluent_kafka_acl" "connect-sa-describe-on-cluster" {
+  kafka_cluster {
+    id = confluent_kafka_cluster.basic.id
+  }
+  resource_type = "CLUSTER"
+  resource_name = "kafka-cluster"
+  pattern_type  = "LITERAL"
+  principal     = "User:${confluent_service_account.connect-sa.id}"
+  host          = "*"
+  operation     = "DESCRIBE"
+  permission    = "ALLOW"
+  rest_endpoint = confluent_kafka_cluster.basic.rest_endpoint
+  credentials {
+    key    = confluent_api_key.app-manager-kafka-api-key.id
+    secret = confluent_api_key.app-manager-kafka-api-key.secret
+  }
+}
+
+
 resource "confluent_kafka_acl" "connect-sa-write-on-topic" {
   kafka_cluster {
     id = confluent_kafka_cluster.basic.id
@@ -211,6 +230,80 @@ resource "confluent_kafka_acl" "connect-sa-write-on-topic" {
   principal     = "User:${confluent_service_account.connect-sa.id}"
   host          = "*"
   operation     = "WRITE"
+  permission    = "ALLOW"
+  rest_endpoint = confluent_kafka_cluster.basic.rest_endpoint
+  credentials {
+    key    = confluent_api_key.app-manager-kafka-api-key.id
+    secret = confluent_api_key.app-manager-kafka-api-key.secret
+  }
+}
+
+resource "confluent_kafka_acl" "connect-sa-create-on-connect-topics" {
+  kafka_cluster {
+    id = confluent_kafka_cluster.basic.id
+  }
+
+  resource_type = "TOPIC"
+  resource_name = "confluent.connect"
+  pattern_type  = "PREFIXED"
+  principal     = "User:${confluent_service_account.connect-sa.id}"
+  host          = "*"
+  operation     = "CREATE"
+  permission    = "ALLOW"
+  rest_endpoint = confluent_kafka_cluster.basic.rest_endpoint
+  credentials {
+    key    = confluent_api_key.app-manager-kafka-api-key.id
+    secret = confluent_api_key.app-manager-kafka-api-key.secret
+  }
+}
+
+resource "confluent_kafka_acl" "connect-sa-write-on-connect-topics" {
+  kafka_cluster {
+    id = confluent_kafka_cluster.basic.id
+  }
+
+  resource_type = "TOPIC"
+  resource_name = "confluent.connect"
+  pattern_type  = "PREFIXED"
+  principal     = "User:${confluent_service_account.connect-sa.id}"
+  host          = "*"
+  operation     = "WRITE"
+  permission    = "ALLOW"
+  rest_endpoint = confluent_kafka_cluster.basic.rest_endpoint
+  credentials {
+    key    = confluent_api_key.app-manager-kafka-api-key.id
+    secret = confluent_api_key.app-manager-kafka-api-key.secret
+  }
+}
+
+resource "confluent_kafka_acl" "connect-sa-read-on-connect-group" {
+  kafka_cluster {
+    id = confluent_kafka_cluster.basic.id
+  }
+  resource_type = "GROUP"
+  resource_name = "confluent.connect"
+  pattern_type  = "PREFIXED"
+  principal     = "User:${confluent_service_account.connect-sa.id}"
+  host          = "*"
+  operation     = "READ"
+  permission    = "ALLOW"
+  rest_endpoint = confluent_kafka_cluster.basic.rest_endpoint
+  credentials {
+    key    = confluent_api_key.app-manager-kafka-api-key.id
+    secret = confluent_api_key.app-manager-kafka-api-key.secret
+  }
+}
+
+resource "confluent_kafka_acl" "connect-sa-read-on-connect-topics" {
+  kafka_cluster {
+    id = confluent_kafka_cluster.basic.id
+  }
+  resource_type = "TOPIC"
+  resource_name = "confluent.connect"
+  pattern_type  = "PREFIXED"
+  principal     = "User:${confluent_service_account.connect-sa.id}"
+  host          = "*"
+  operation     = "READ"
   permission    = "ALLOW"
   rest_endpoint = confluent_kafka_cluster.basic.rest_endpoint
   credentials {

@@ -1,0 +1,30 @@
+apiVersion: platform.confluent.io/v1beta1
+kind: Connect
+metadata:
+  name: connect
+  namespace: confluent
+spec:
+  keyConverterType: io.confluent.connect.avro.AvroConverter
+  valueConverterType: io.confluent.connect.avro.AvroConverter
+  replicas: 1
+  image:
+    application: confluentinc/cp-server-connect:7.2.0
+    init: confluentinc/confluent-init-container:2.4.0
+  dependencies:
+    kafka:
+      bootstrapEndpoint: pkc-l6wr6.europe-west2.gcp.confluent.cloud:9092
+      authentication:
+        type: plain
+        jaasConfig:
+          secretRef: ccloud-credentials
+      tls:
+        enabled: true
+        ignoreTrustStoreConfig: true 
+    schemaRegistry:
+      url: https://psrc-kk5gg.europe-west3.gcp.confluent.cloud
+      authentication:
+        type: basic
+        basic:
+          secretRef: ccloud-sr-credentials
+  mountedSecrets:
+  - secretRef: postgres-credentials

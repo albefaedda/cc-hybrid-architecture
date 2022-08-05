@@ -10,4 +10,4 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 5Gi # Sets PVC's size
+      storage: 1Gi # Sets PVC's size
