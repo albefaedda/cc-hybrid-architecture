@@ -10,6 +10,15 @@ spec:
   image:
     application: confluentinc/cp-server-connect:7.2.0
     init: confluentinc/confluent-init-container:2.4.0
+  build:
+    type: onDemand
+    onDemand: 
+      plugins:
+        locationType: url
+        url:
+          - name: debezium-postgresql
+            archivePath: https://raw.githubusercontent.com/albefaedda/cc-hybrid-architecture-exercise/main/cfk/debezium-debezium-connector-postgresql-1.9.3.zip
+            checksum: 7cf984e4f22d115cb818600dfd3b136270cfd4572fb47f81077d318e436201d42375526b12b525ddaa9ab7999ca3226ed7f96dfc50da865a37059c4829b4b261
   dependencies:
     kafka:
       bootstrapEndpoint: pkc-l6wr6.europe-west2.gcp.confluent.cloud:9092
@@ -28,3 +37,7 @@ spec:
           secretRef: ccloud-sr-credentials
   mountedSecrets:
   - secretRef: postgres-credentials
+
+
+
+  
