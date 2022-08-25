@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:12.10 # Docker image
+          image: debezium/example-postgres            # Docker original image: postgres:12.10 
           imagePullPolicy: "IfNotPresent"
           resources:
             requests:
@@ -31,7 +31,7 @@ spec:
           volumeMounts:
             - name: postgresdata
               mountPath: /var/lib/postgresql/data
-              readOnly: false
+              # readnly: false
       volumes:
         - name: postgresdata
           persistentVolumeClaim:

@@ -36,6 +36,12 @@ Create a Kubernetes deployment
 kubectl apply -f postgres-deployment.yaml
 ```
 
+Create postgres service
+
+```sh
+kubectl apply -f postgres-service.yaml
+```
+
 Connect to the postgres database, connect to db using psql command and run sql statements to create tables and insert data
 
 ```sh
@@ -44,13 +50,14 @@ kubectl exec -it <postgres-pod> -- /bin/bash
 
 psql -U appuser -p 5432 -d groceries-mp-db
 
+drop schema inventory cascade;
+
 manage the database 
 \c groceries-mp-db
 
-create enum and describe with: 
-select enum_range(null::status)
+Use data.sql to create the database schema and tables and insert data. 
 
-create tables and describe with: 
+describes with with: 
 \d customers;
 \d orders;
 \d products;
