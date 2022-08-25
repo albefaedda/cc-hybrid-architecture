@@ -79,31 +79,6 @@ resource "confluent_kafka_topic" "topics" {
   }
 }
 
-resource "confluent_service_account" "ksql-sa" {
-  display_name = "ksql-sa-${var.cluster_name}"
-  description  = "Service account for KSQL"
-}
-
-resource "confluent_api_key" "ksql-sa-kafka-api-key" {
-  display_name = "ksql-sa-kafka-api-key-${var.cluster_name}"
-  description  = "Kafka API Key that is owned by 'ksql-sa' service account"
-  owner {
-    id          = confluent_service_account.ksql-sa.id
-    api_version = confluent_service_account.ksql-sa.api_version
-    kind        = confluent_service_account.ksql-sa.kind
-  }
-
-  managed_resource {
-    id          = confluent_kafka_cluster.basic.id
-    api_version = confluent_kafka_cluster.basic.api_version
-    kind        = confluent_kafka_cluster.basic.kind
-
-    environment {
-      id = confluent_environment.dev-test.id
-    }
-  }
-}
-
 resource "confluent_service_account" "kstreams-sa" {
   display_name = "kstreams-sa-${var.cluster_name}"
   description  = "Service account for KStreams"
