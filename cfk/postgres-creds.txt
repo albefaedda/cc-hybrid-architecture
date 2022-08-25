@@ -1,0 +1,1 @@
+connectinon=jdbc:postgres:5432/groceries-mp-db?user=appuser&password=$7r0ngp4$$word4pp

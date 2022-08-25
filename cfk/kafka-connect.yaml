@@ -21,7 +21,7 @@ spec:
             checksum: 7cf984e4f22d115cb818600dfd3b136270cfd4572fb47f81077d318e436201d42375526b12b525ddaa9ab7999ca3226ed7f96dfc50da865a37059c4829b4b261
   dependencies:
     kafka:
-      bootstrapEndpoint: pkc-l6wr6.europe-west2.gcp.confluent.cloud:9092
+      bootstrapEndpoint: ${kafka.srv}
       authentication:
         type: plain
         jaasConfig:
@@ -30,7 +30,7 @@ spec:
         enabled: true
         ignoreTrustStoreConfig: true 
     schemaRegistry:
-      url: https://psrc-kk5gg.europe-west3.gcp.confluent.cloud
+      url: ${sr.url}
       authentication:
         type: basic
         basic:
