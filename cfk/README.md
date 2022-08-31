@@ -21,7 +21,7 @@ cd confluent-for-kubernetes/helm
 
 helm upgrade --install confluent-operator \
   ./confluent-for-kubernetes \
-  --namespace <namespace>
+  --namespace confluent
 ```
 
 Install Confluent CRDs (if not installed automatically)
@@ -47,7 +47,7 @@ Create K8s secrets and jdbc connection for postgres
 ```sh
 This file has structure: 
 
-connectinon=jdbc:<db-container-name>:<container-port>/<db-name>?user=<username>&password=<password>
+connectinon=jdbc:<db-container-name>:<container-port>/<db-name>?schema=<schema-name>&user=<username>&password=<password>
 
 kubectl create secret generic postgres-credentials --from-file=plain.txt=postgres-creds.txt
 ```
@@ -57,11 +57,11 @@ Deploy Connect Server providing kafka bootstrap-server and schema registry url i
 yq '.spec.dependencies.schemaRegistry.url = "<schema-registry-url>/contexts/[.dev|.test|prd]" | .spec.dependencies.kafka.bootstrapEndpoint = "<kafka-bootstrap-server>"' kafka-connect.yaml | kubectl apply -f -
 ```
 
-yq '.spec.dependencies.schemaRegistry.url = "https://psrc-9zg5y.europe-west3.gcp.confluent.cloud" | .spec.dependencies.kafka.bootstrapEndpoint = "pkc-l6wr6.europe-west2.gcp.confluent.cloud:9092"' kafka-connect.yaml | kubectl apply -f -
+yq '.spec.dependencies.schemaRegistry.url = "https://psrc-2312y.europe-west3.gcp.confluent.cloud" | .spec.dependencies.kafka.bootstrapEndpoint = "pkc-l6wr6.europe-west2.gcp.confluent.cloud:9092"' kafka-connect.yaml | kubectl apply -f -
 
 
 
-Start Debezium Source Connector for Postgres: 
+Start JDBC Source Connector for Postgres: 
 
 ```sh
 Exec into bash of the connect-server pod 
@@ -72,8 +72,33 @@ Delete connector, if needed:
 
 curl -X DELETE http://localhost:8083/connectors/debezium-postgres-source
 
-curl -X POST -H "Content-Type: application/json" \
- --data '{ "name": "debezium-postgres-grocery-shop", "config": { "connector.class": "io.debezium.connector.postgresql.PostgresConnector", "database.hostname": "postgres.default", "database.port": "5432", "database.user": "appuser", "database.password":"$7r0ngp4$$word4pp", "database.dbname":"groceries-mp-db", "database.server.name":"postgres", "schema.include.list": "grocery_shop", "table.include.list":"grocery_shop.customers,grocery_shop.sellers,grocery_shop.products,grocery_shop.orders" } }' \
- http://localhost:8083/connectors/
+/* ALL */
+
+curl -X POST -H "Content-Type: application/json"  --data '{ "name": "jdbc-grocery-shop", "config": { "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector", 
+ "connection.url": "jdbc:postgresql://postgres.default:5432/groceries-mp-db?schema=grocery_shop&user=appuser&password=$7r0ngp4$$word4pp", "schema.pattern": "grocery_shop", "catalog.pattern": "grocery_shop", "table.whitelist": "sellers,customers,products,orders", "tables": "sellers,customers,products,orders", "mode": "timestamp", "timestamp.column.name":"last_update_time", "topic.prefix": "postgres.grocery_shop.", "task.max": "1" } }'  http://localhost:8083/connectors/
+
+/* SELLERS */
+
+curl -X POST -H "Content-Type: application/json"  --data '{ "name": "grocery-shop-sellers", "config": { "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector", 
+ "connection.url": "jdbc:postgresql://postgres.default:5432/groceries-mp-db?schema=grocery_shop&user=appuser&password=$7r0ngp4$$word4pp", "schema.pattern": "grocery_shop", "catalog.pattern": "grocery_shop", "table.whitelist": "sellers", "tables": "sellers", "mode": "timestamp", "timestamp.column.name":"last_update_time", "topic.prefix": "postgres.grocery_shop.", "task.max": "1" } }'  http://localhost:8083/connectors/
+
+/* CUSTOMERS */
+
+curl -X POST -H "Content-Type: application/json"  --data '{ "name": "grocery-shop-customers", "config": { "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector", 
+ "connection.url": "jdbc:postgresql://postgres.default:5432/groceries-mp-db?schema=grocery_shop&user=appuser&password=$7r0ngp4$$word4pp", "schema.pattern": "grocery_shop", "catalog.pattern": "grocery_shop", "table.whitelist": "customers", "tables": "customers", "mode": "timestamp", "timestamp.column.name":"last_update_time", "topic.prefix": "postgres.grocery_shop.", "task.max": "1" } }'  http://localhost:8083/connectors/
+
+/* PRODUCTS */
+
+curl -X POST -H "Content-Type: application/json"  --data '{ "name": "grocery-shop-products", "config": { "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector", 
+ "connection.url": "jdbc:postgresql://postgres.default:5432/groceries-mp-db?schema=grocery_shop&user=appuser&password=$7r0ngp4$$word4pp", "schema.pattern": "grocery_shop", "catalog.pattern": "grocery_shop", "table.whitelist": "products", "tables": "products", "mode": "timestamp", "timestamp.column.name":"last_update_time", "topic.prefix": "postgres.grocery_shop.", "task.max": "1" } }'  http://localhost:8083/connectors/
+
+/* ORDERS */
+
+ curl -X POST -H "Content-Type: application/json"  --data '{ "name": "grocery-shop-orders", "config": { "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector", 
+ "connection.url": "jdbc:postgresql://postgres.default:5432/groceries-mp-db?schema=grocery_shop&user=appuser&password=$7r0ngp4$$word4pp", "schema.pattern": "grocery_shop", "catalog.pattern": "grocery_shop", "table.whitelist": "orders", "tables": "orders", "mode": "timestamp", "timestamp.column.name":"last_update_time","topic.prefix": "postgres.grocery_shop.", "task.max": "1" } }'  http://localhost:8083/connectors/
+
 ```
+
+
 In Confluuent Cloud, KSQLDB doesn't automatically infer the schema and fields of the messages in the topics when using schema-registry contexts
+
