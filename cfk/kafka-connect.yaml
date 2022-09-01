@@ -19,19 +19,6 @@ spec:
           - name: jdbc-source-postgresql
             archivePath: https://raw.githubusercontent.com/albefaedda/cc-hybrid-architecture-exercise/main/cfk/confluentinc-kafka-connect-jdbc-10.5.2.zip
             checksum: 453f509fba18018ba6a40d044cc6bf01afe2a6226ffc9c9b95ba4c605e59814733aa0c6cb2556b4546b1bc9bf44005feeb0953b049f134fe102c364f9d346d39
-#  podTemplate:
-#    resources:
-#      requests:
-#        memory: "64Mi"
-#        cpu: "128m"
-#      limits:
-#        memory: "256Mi"
-#        cpu: "500m"
-#  configOverrides:
-#    jvm:
-#      - "-Xmx6g"      # Set to 6 Gb
-#      - "-XX:MetaspaceSize=96m"
-#      - "-XX:+UseG1GC"
   dependencies:
     kafka:
       bootstrapEndpoint: ${kafka.srv}
