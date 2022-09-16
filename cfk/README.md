@@ -17,7 +17,7 @@ curl -O https://confluent-for-kubernetes.s3-us-west-1.amazonaws.com/confluent-fo
 Move to the helm dir inside the unarchived package and install the chart
 
 ```sh
-cd confluent-for-kubernetes/helm
+cd confluent-for-k8s/helm
 
 helm upgrade --install confluent-operator \
   ./confluent-for-kubernetes \
@@ -57,7 +57,7 @@ Deploy Connect Server providing kafka bootstrap-server and schema registry url i
 yq '.spec.dependencies.schemaRegistry.url = "<schema-registry-url>/contexts/[.dev|.test|prd]" | .spec.dependencies.kafka.bootstrapEndpoint = "<kafka-bootstrap-server>"' kafka-connect.yaml | kubectl apply -f -
 ```
 
-yq '.spec.dependencies.schemaRegistry.url = "https://psrc-2312y.europe-west3.gcp.confluent.cloud" | .spec.dependencies.kafka.bootstrapEndpoint = "pkc-l6wr6.europe-west2.gcp.confluent.cloud:9092"' kafka-connect.yaml | kubectl apply -f -
+yq '.spec.dependencies.schemaRegistry.url = "https://psrc-9zg5y.europe-west3.gcp.confluent.cloud" | .spec.dependencies.kafka.bootstrapEndpoint = "pkc-l6wr6.europe-west2.gcp.confluent.cloud:9092"' kafka-connect.yaml | kubectl apply -f -
 
 
 
@@ -70,12 +70,12 @@ kubectl exec connect-0 -it -n confluent -- bash
 
 Delete connector, if needed: 
 
-curl -X DELETE http://localhost:8083/connectors/debezium-postgres-source
+curl -X DELETE http://localhost:8083/connectors/jdbc-grocery-shop
 
 /* ALL */
 
 curl -X POST -H "Content-Type: application/json"  --data '{ "name": "jdbc-grocery-shop", "config": { "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector", 
- "connection.url": "jdbc:postgresql://postgres.default:5432/groceries-mp-db?schema=grocery_shop&user=appuser&password=$7r0ngp4$$word4pp", "schema.pattern": "grocery_shop", "catalog.pattern": "grocery_shop", "table.whitelist": "sellers,customers,products,orders", "tables": "sellers,customers,products,orders", "mode": "timestamp", "timestamp.column.name":"last_update_time", "topic.prefix": "postgres.grocery_shop.", "task.max": "1" } }'  http://localhost:8083/connectors/
+ "connection.url": "jdbc:postgresql://postgres.default:5432/groceries-mp-db?schema=grocery_shop&user=appuser&password=$7r0ngp4$$word4pp", "schema.pattern": "grocery_shop", "catalog.pattern": "grocery_shop", "table.whitelist": "sellers,customers,products,orders", "tables": "sellers,customers,products,orders", "mode": "timestamp", "timestamp.column.name":"last_update_time", "topic.prefix": "postgres.grocery_shop.", "transforms": "ValueToKey,extractField", "transforms.ValueToKey.type": "org.apache.kafka.connect.transforms.ValueToKey","transforms.ValueToKey.fields": "id", "transforms.extractField.type": "org.apache.kafka.connect.transforms.ExtractField$Key", "transforms.extractField.field": "id"} }'  http://localhost:8083/connectors/
 
 /* SELLERS */
 

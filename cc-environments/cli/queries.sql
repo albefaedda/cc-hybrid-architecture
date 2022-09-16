@@ -8,55 +8,87 @@ ksqlDB uses the most recent schema at the time the statement is first executed.
 
 /* Sellers table */
 
-CREATE STREAM sellers
+CREATE TABLE sellers (
+	id VARCHAR PRIMARY KEY,
+  	seller_name VARCHAR,
+  	seller_company VARCHAR,
+  	seller_email VARCHAR,
+  	seller_address VARCHAR,
+  	last_update_time BIGINT
+	)
     WITH (KAFKA_TOPIC='postgres.grocery_shop.sellers',
+        KEY_FORMAT='AVRO',
         VALUE_FORMAT='AVRO'
 );
 
 /* Customers table */
 
-CREATE STREAM customers 
+CREATE TABLE customers (
+	id VARCHAR PRIMARY KEY, 
+	customer_name VARCHAR,
+	customer_email VARCHAR,
+	customer_address VARCHAR, 
+	last_update_time BIGINT
+	)
     WITH (KAFKA_TOPIC='postgres.grocery_shop.customers',
+        KEY_FORMAT='AVRO',
         VALUE_FORMAT='AVRO'
 );
 
 /* Products table */
 
-CREATE STREAM products 
-    WITH (KAFKA_TOPIC='postgres.grocery_shop.products',
+create table products(
+  id INTEGER PRIMARY KEY,
+  product_name VARCHAR,
+  product_cost double,
+  product_quantity integer,
+  seller_id VARCHAR,
+  last_update_time BIGINT
+) WITH (KAFKA_TOPIC='postgres.grocery_shop.products',
+        KEY_FORMAT='AVRO',
         VALUE_FORMAT='AVRO'
 );
 
 /* Orders stream */
 
-CREATE STREAM orders 
+CREATE STREAM orders (
+        id INTEGER KEY,
+        customer_id VARCHAR,
+        items_ordered VARCHAR,
+        order_status VARCHAR, 
+        tracking_number VARCHAR,
+        create_time bigint,
+        last_update_time bigint
+    )
     WITH (KAFKA_TOPIC='postgres.grocery_shop.orders',
-        VALUE_FORMAT='AVRO'
+        KEY_FORMAT='AVRO',
+        VALUE_FORMAT='AVRO', 
+        TIMESTAMP='create_time'
 );
 
 
 /* Explode Order Items*/
 
 create stream single_product_orders as 
-select 
-order_id, customer_id, 
+select id, customer_id, 
 CAST(TRIM(EXPLODE(SPLIT(SUBSTRING(ITEMS_ORDERED, 2,  LEN(ITEMS_ORDERED) -2), ','))) as INT) as item_ordered, 
-ORDER_STATUS as order_status, 
-TRACKING_NUMBER as tracking_number, 
-CREATE_TIME as create_time, 
-LAST_UPDATE_TIME as last_update_time
-from ORDERS PARTITION by ORDER_ID 
+order_status, 
+tracking_number, 
+create_time, 
+last_update_time
+from ORDERS PARTITION by id 
 EMIT CHANGES;
 
 
 /* Calculating the cost of an order and creating a customer reporting view of the most up to date status of each order */
 
-select o.order_id, c.customer_name, sum(p.product_cost) as order_price, o.order_status, o.create_time
-from single_product_orders o join products p
-WITHIN 10 MINUTES on o.item_ordered = p.product_id
+create table order_cost_status as 
+select spo.id, c.customer_name, sum(p.product_cost) as order_price, spo.order_status, spo.create_time
+from single_product_orders spo join products p
+on spo.item_ordered = p.id
 join customers c 
-WITHIN 10 MINUTES on o.customer_id = c.customer_id
-GROUP by o.order_id, c.customer_name, o.order_status, o.create_time
+on spo.customer_id = c.id
+GROUP by spo.id, c.customer_name, spo.order_status, spo.create_time
 EMIT CHANGES;
 
 /* Tracking each customer's total spend */

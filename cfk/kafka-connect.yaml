@@ -36,8 +36,14 @@ spec:
         basic:
           secretRef: ccloud-sr-credentials
   mountedSecrets:
-  - secretRef: postgres-credentials
-
+    - secretRef: postgres-credentials
+  configOverrides:
+    server:
+      - key.converter.schema.registry.url=https://psrc-9zg5y.europe-west3.gcp.confluent.cloud
+      - key.converter=io.confluent.connect.avro.AvroConverter
+      - value.converter.schema.registry.url=https://psrc-9zg5y.europe-west3.gcp.confluent.cloud
+      - value.converter=io.confluent.connect.avro.AvroConverter
+      
 
 
   
