@@ -4,6 +4,8 @@ Connect to the Kubernetes cluster.
 
 ```sh
 gcloud container clusters get-credentials afaedda-gke --region <your-gcloud-region> --project solutionsarchitect-01
+
+my-region: europe-west2
 ```
 
 Make sure you can see the Kubernetes cluster namespaces:

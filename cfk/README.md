@@ -57,11 +57,17 @@ Deploy Connect Server providing kafka bootstrap-server and schema registry url i
 yq '.spec.dependencies.schemaRegistry.url = "<schema-registry-url>/contexts/[.dev|.test|prd]" | .spec.dependencies.kafka.bootstrapEndpoint = "<kafka-bootstrap-server>"' kafka-connect.yaml | kubectl apply -f -
 ```
 
-yq '.spec.dependencies.schemaRegistry.url = "https://psrc-9zg5y.europe-west3.gcp.confluent.cloud" | .spec.dependencies.kafka.bootstrapEndpoint = "pkc-l6wr6.europe-west2.gcp.confluent.cloud:9092"' kafka-connect.yaml | kubectl apply -f -
+yq '.spec.dependencies.schemaRegistry.url = "https://psrc-kk5gg.europe-west3.gcp.confluent.cloud" | .spec.dependencies.kafka.bootstrapEndpoint = "pkc-l6wr6.europe-west2.gcp.confluent.cloud:9092"' kafka-connect.yaml | kubectl apply -f -
+
+Start JDBC Source Connector for Postgres (with CRD):
+```sh
+
+kubectl apply -f jdbc-connector.yaml
+
+```
 
 
-
-Start JDBC Source Connector for Postgres: 
+Start JDBC Source Connector for Postgres (manually): 
 
 ```sh
 Exec into bash of the connect-server pod 

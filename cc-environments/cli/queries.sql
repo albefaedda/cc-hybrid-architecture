@@ -18,7 +18,8 @@ CREATE TABLE sellers (
 	)
     WITH (KAFKA_TOPIC='postgres.grocery_shop.sellers',
         KEY_FORMAT='AVRO',
-        VALUE_FORMAT='AVRO'
+        VALUE_FORMAT='AVRO', 
+        TIMESTAMP='last_update_time'
 );
 
 /* Customers table */
@@ -32,7 +33,8 @@ CREATE TABLE customers (
 	)
     WITH (KAFKA_TOPIC='postgres.grocery_shop.customers',
         KEY_FORMAT='AVRO',
-        VALUE_FORMAT='AVRO'
+        VALUE_FORMAT='AVRO', 
+        TIMESTAMP='last_update_time'
 );
 
 /* Products table */
@@ -46,7 +48,8 @@ create table products(
   last_update_time BIGINT
 ) WITH (KAFKA_TOPIC='postgres.grocery_shop.products',
         KEY_FORMAT='AVRO',
-        VALUE_FORMAT='AVRO'
+        VALUE_FORMAT='AVRO', 
+        TIMESTAMP='last_update_time'
 );
 
 /* Orders stream */
@@ -88,6 +91,7 @@ from single_product_orders spo join products p
 on spo.item_ordered = p.id
 join customers c 
 on spo.customer_id = c.id
+where spo.item_ordered not null
 GROUP by spo.id, c.customer_name, spo.order_status, spo.create_time
 EMIT CHANGES;
 
@@ -95,9 +99,9 @@ EMIT CHANGES;
 
 select c.customer_name, sum(p.product_cost) as customer_total_spend
 from single_product_orders o join products p
-WITHIN 1 MINUTE on o.item_ordered = p.product_id
+on o.item_ordered = p.id
 join  customers c 
-WITHIN 1 MINUTE on o.customer_id = c.customer_id
+on o.customer_id = c.id
 GROUP by c.customer_name
 EMIT CHANGES;
 
@@ -105,9 +109,9 @@ EMIT CHANGES;
 
 select s.seller_name, sum(p.product_cost) as seller_total_revenue
 from single_product_orders o join products p
-WITHIN 10 MINUTES on o.item_ordered = p.product_id
+on o.item_ordered = p.id
 join  sellers s
-WITHIN 10 MINUTES on p.seller_id = s.seller_id
+on p.seller_id = s.id
 GROUP by s.seller_name
 EMIT CHANGES;
 
