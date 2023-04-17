@@ -1,9 +1,13 @@
-# Authenticate to GKE Cluster: 
 
-gcloud container clusters get-credentials afaedda-gke --region <your-gcloud-region> --project <your-project-id>
 
 # Deploy Connect cluster to GKE
 
+Authenticate to GKE Cluster: 
+
+```sh
+gcloud container clusters get-credentials afaedda-gke --region <your-gcloud-region> --project <your-project-id>
+```
+  
 Create confluent namespace and switch context to it
 
 ```sh
