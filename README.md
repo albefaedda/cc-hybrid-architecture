@@ -1,4 +1,4 @@
-# cc-hybrid-architecture-exercise
+# cc-hybrid-architecture
 Explore Confluent Ecosystem and different deployment and application design type
 
 Create Confluent Cloud cluster by following [these](cc-environments/terraform/README.md) instructions
