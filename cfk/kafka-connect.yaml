@@ -43,7 +43,3 @@ spec:
       - key.converter=io.confluent.connect.avro.AvroConverter
       - value.converter.schema.registry.url=https://cc-sr-url
       - value.converter=io.confluent.connect.avro.AvroConverter
-      
-
-
-  
