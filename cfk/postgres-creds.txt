@@ -1,1 +1,1 @@
-connectinon=jdbc:postgres:5432/groceries-mp-db?user=appuser&password=$7r0ngp4$$word4pp
+connection=jdbc:postgresql://postgres.default:5432/groceries-mp-db?schema=grocery_shop&user=appuser&password=$7r0ngp4$$word4pp

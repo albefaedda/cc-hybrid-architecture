@@ -27,7 +27,7 @@ confluent schema-registry cluster enable --cloud gcp --geo eu
 Create an Api-Key for your newly created schema-registry 
 
 ```sh
- confluent api-key create --resource <schema-registry-id>
+confluent api-key create --resource <schema-registry-id>
 ```
 
 Put this Api-key on the ccloud-sr-credentials.txt file for cfk to be able to communicate with Schema Registry

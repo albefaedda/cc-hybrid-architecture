@@ -72,7 +72,11 @@ resource "confluent_kafka_topic" "topics" {
   for_each = var.topics
 
   topic_name    = each.key
+  partitions_count = 3
   rest_endpoint = confluent_kafka_cluster.basic.rest_endpoint
+  config = {
+    "retention.ms" = "31556926000"
+  }
   credentials {
     key    = confluent_api_key.app-manager-kafka-api-key.id
     secret = confluent_api_key.app-manager-kafka-api-key.secret

@@ -91,7 +91,6 @@ from single_product_orders spo join products p
 on spo.item_ordered = p.id
 join customers c 
 on spo.customer_id = c.id
-where spo.item_ordered not null
 GROUP by spo.id, c.customer_name, spo.order_status, spo.create_time
 EMIT CHANGES;
 

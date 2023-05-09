@@ -39,9 +39,9 @@ spec:
     - secretRef: postgres-credentials
   configOverrides:
     server:
-      - key.converter.schema.registry.url=https://psrc-kk5gg.europe-west3.gcp.confluent.cloud
+      - key.converter.schema.registry.url=https://cc-sr-url
       - key.converter=io.confluent.connect.avro.AvroConverter
-      - value.converter.schema.registry.url=https://psrc-kk5gg.europe-west3.gcp.confluent.cloud
+      - value.converter.schema.registry.url=https://cc-sr-url
       - value.converter=io.confluent.connect.avro.AvroConverter
       
 
